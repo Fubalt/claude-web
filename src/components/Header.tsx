@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, Heart, Menu, Search, X } from "lucide-react";
 
@@ -32,14 +32,55 @@ function InstagramIcon() {
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Scroll detection for sticky effect
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Animate menu open
+  const openMenu = () => {
+    setMenuOpen(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setMenuVisible(true));
+    });
+  };
+
+  // Animate menu close
+  const closeMenu = () => {
+    setMenuVisible(false);
+    setTimeout(() => setMenuOpen(false), 350);
+  };
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeMenu(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   return (
     <>
-      <header className="relative z-50 h-[70px] border-b border-white/10 bg-[#181a1b] text-[#e8e6e3]">
+      <header
+        className="fixed top-0 left-0 right-0 z-50 h-[70px] border-b text-[#e8e6e3] transition-all duration-300"
+        style={{
+          borderColor: scrolled ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.10)",
+          backgroundColor: scrolled
+            ? "rgba(24, 26, 27, 0.75)"
+            : "rgba(24, 26, 27, 1)",
+          backdropFilter: scrolled ? "blur(14px) saturate(1.4)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(14px) saturate(1.4)" : "none",
+        }}
+      >
         <div className="mx-auto flex h-16 max-w-[1512px] items-center gap-6 px-6">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setMenuOpen(true)}
+              onClick={openMenu}
               className="flex cursor-pointer items-center p-1 text-[#e8e6e3] transition-opacity hover:opacity-70"
               aria-label="Open menu"
             >
@@ -62,37 +103,37 @@ export function Header() {
 
           <div className="hidden flex-1 items-center justify-between md:flex">
             <nav className="flex items-center gap-4 pl-2">
-            {navItems.map((item) => (
-              <button
-                key={item}
-                className="flex cursor-pointer items-center gap-1 bg-transparent px-1 py-[5px] font-heading text-[15px] font-normal uppercase text-[#e8e6e3] transition-opacity hover:opacity-70"
-              >
-                {item}
-                <ChevronDown size={14} strokeWidth={1.7} />
-              </button>
-            ))}
+              {navItems.map((item) => (
+                <button
+                  key={item}
+                  className="flex cursor-pointer items-center gap-1 bg-transparent px-1 py-[5px] font-heading text-[15px] font-normal uppercase text-[#e8e6e3] transition-opacity hover:opacity-70"
+                >
+                  {item}
+                  <ChevronDown size={14} strokeWidth={1.7} />
+                </button>
+              ))}
             </nav>
 
             <div className="flex items-center gap-3">
               <a
-              href="https://wa.me/+971505919770?text=Ask+us+anything"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex text-[#e8e6e3] opacity-80 transition-opacity hover:opacity-100"
-              aria-label="WhatsApp"
-            >
-              <WhatsAppIcon />
-            </a>
-            <a
-              href="https://www.instagram.com/bareface_model_agency/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex text-[#e8e6e3] opacity-80 transition-opacity hover:opacity-100"
-              aria-label="Instagram"
-            >
-              <InstagramIcon />
-            </a>
-          </div>
+                href="https://wa.me/+971505919770?text=Ask+us+anything"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex text-[#e8e6e3] opacity-80 transition-opacity hover:opacity-100"
+                aria-label="WhatsApp"
+              >
+                <WhatsAppIcon />
+              </a>
+              <a
+                href="https://www.instagram.com/bareface_model_agency/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex text-[#e8e6e3] opacity-80 transition-opacity hover:opacity-100"
+                aria-label="Instagram"
+              >
+                <InstagramIcon />
+              </a>
+            </div>
           </div>
 
           <Link href="/" className="ml-auto flex items-center md:ml-0" aria-label="BareFace home">
@@ -107,32 +148,52 @@ export function Header() {
         </div>
       </header>
 
+      {/* Spacer to compensate for fixed header */}
+      <div className="h-[70px]" />
+
+      {/* Mobile full-screen menu with slide + fade animation */}
       {menuOpen && (
         <div
           className="fixed inset-0 z-[100] flex flex-col bg-[#181a1b] px-6 py-5 text-[#e8e6e3]"
+          style={{
+            opacity: menuVisible ? 1 : 0,
+            transform: menuVisible ? "translateX(0)" : "translateX(-24px)",
+            transition: "opacity 350ms cubic-bezier(0.16, 1, 0.3, 1), transform 350ms cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
         >
           <button
-            onClick={() => setMenuOpen(false)}
+            onClick={closeMenu}
             className="ml-auto cursor-pointer text-[#e8e6e3] transition-opacity hover:opacity-70"
             aria-label="Close menu"
           >
             <X size={24} />
           </button>
+
           <nav className="mt-8 flex flex-col gap-4">
-            {navItems.map((item) => (
+            {navItems.map((item, i) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase()}`}
-                onClick={() => setMenuOpen(false)}
-                className="font-heading text-[24px] font-normal uppercase tracking-[0.06em] text-[#e8e6e3]"
+                onClick={closeMenu}
+                className="font-heading text-[24px] font-normal uppercase tracking-[0.06em] text-[#e8e6e3] transition-opacity hover:opacity-60"
+                style={{
+                  opacity: menuVisible ? 1 : 0,
+                  transform: menuVisible ? "translateY(0)" : "translateY(10px)",
+                  transition: `opacity 350ms cubic-bezier(0.16, 1, 0.3, 1) ${80 + i * 40}ms, transform 350ms cubic-bezier(0.16, 1, 0.3, 1) ${80 + i * 40}ms`,
+                }}
               >
                 {item}
               </Link>
             ))}
             <Link
               href="/apply"
-              onClick={() => setMenuOpen(false)}
-              className="mt-4 font-heading text-[24px] font-normal uppercase tracking-[0.06em] text-[#e8e6e3]"
+              onClick={closeMenu}
+              className="mt-4 font-heading text-[24px] font-normal uppercase tracking-[0.06em] text-[#e8e6e3] transition-opacity hover:opacity-60"
+              style={{
+                opacity: menuVisible ? 1 : 0,
+                transform: menuVisible ? "translateY(0)" : "translateY(10px)",
+                transition: `opacity 350ms cubic-bezier(0.16, 1, 0.3, 1) ${80 + navItems.length * 40}ms, transform 350ms cubic-bezier(0.16, 1, 0.3, 1) ${80 + navItems.length * 40}ms`,
+              }}
             >
               Apply Now
             </Link>
