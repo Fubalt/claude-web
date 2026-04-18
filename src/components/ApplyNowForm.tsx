@@ -2,8 +2,6 @@
 
 import { useRef, useState } from "react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type FormData = {
   email: string;
   confirmEmail: string;
@@ -33,45 +31,13 @@ type UploadedPhoto = {
   previewUrl: string;
 };
 
-// ─── Design tokens ────────────────────────────────────────────────────────────
+const inputClass =
+  "box-border h-12 w-full border border-border bg-background px-3 font-sans text-[13px] font-normal uppercase tracking-wide text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground";
 
-const inputStyle: React.CSSProperties = {
-  display: "block",
-  width: "100%",
-  height: 48,
-  border: "1px solid #878787",
-  background: "transparent",
-  padding: "0 12px",
-  fontSize: 13,
-  fontFamily: "inherit",
-  color: "#333",
-  outline: "none",
-  boxSizing: "border-box",
-  textTransform: "uppercase" as const,
-};
+const selectClass = `${inputClass} cursor-pointer appearance-none bg-[length:12px] bg-[right_12px_center] bg-no-repeat pr-8`;
 
-const labelStyle: React.CSSProperties = {
-  display: "block",
-  fontSize: 11,
-  fontWeight: 400,
-  color: "#898989",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.05em",
-  marginBottom: 6,
-};
-
-const selectStyle: React.CSSProperties = {
-  ...inputStyle,
-  appearance: "none" as const,
-  WebkitAppearance: "none" as const,
-  cursor: "pointer",
-  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23878787' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "right 12px center",
-  paddingRight: 32,
-};
-
-// ─── Reusable field ───────────────────────────────────────────────────────────
+const textareaClass =
+  "box-border w-full resize-y border border-border bg-background px-3 py-2.5 font-sans text-[13px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground";
 
 function Field({
   label,
@@ -83,47 +49,27 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ marginBottom: 20 }}>
-      <label style={labelStyle}>{label}</label>
+    <div className="mb-5">
+      <label className="mb-1.5 block text-[11px] font-normal uppercase tracking-[0.05em] text-muted-foreground">
+        {label}
+      </label>
       {children}
       {error && (
-        <p style={{ color: "red", fontSize: 11, marginTop: 4, textTransform: "uppercase" }}>
-          {error}
-        </p>
+        <p className="mt-1 text-[11px] font-normal uppercase text-destructive">{error}</p>
       )}
     </div>
   );
 }
 
-// ─── Section header ───────────────────────────────────────────────────────────
-
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        borderTop: "1px solid #d8d8d8",
-        borderBottom: "1px solid #d8d8d8",
-        padding: "14px 0",
-        marginBottom: 24,
-        marginTop: 8,
-      }}
-    >
-      <span
-        style={{
-          fontSize: 13,
-          fontWeight: 600,
-          color: "#333",
-          textTransform: "uppercase",
-          letterSpacing: "0.1em",
-        }}
-      >
+    <div className="mb-6 mt-2 border-y border-border py-3.5">
+      <span className="text-[13px] font-semibold uppercase tracking-[0.1em] text-foreground">
         {children}
       </span>
     </div>
   );
 }
-
-// ─── Photo preview ────────────────────────────────────────────────────────────
 
 function PhotoPreview({
   photo,
@@ -135,20 +81,13 @@ function PhotoPreview({
   onRemove: () => void;
 }) {
   return (
-    <div style={{ position: "relative", width: 120 }}>
-      <div
-        style={{
-          width: 120,
-          height: 160,
-          backgroundColor: "#ececec",
-          overflow: "hidden",
-        }}
-      >
+    <div className="relative w-[120px]">
+      <div className="h-40 w-[120px] overflow-hidden bg-muted">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={photo.previewUrl}
           alt={`Uploaded photo ${index + 1}`}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          className="block h-full w-full object-cover"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
@@ -157,34 +96,13 @@ function PhotoPreview({
       <button
         type="button"
         onClick={onRemove}
-        style={{
-          position: "absolute",
-          top: 4,
-          right: 4,
-          width: 22,
-          height: 22,
-          background: "#333",
-          color: "#fff",
-          border: "none",
-          cursor: "pointer",
-          fontSize: 14,
-          lineHeight: "22px",
-          textAlign: "center",
-          padding: 0,
-        }}
+        className="absolute right-1 top-1 flex h-[22px] w-[22px] cursor-pointer items-center justify-center border-0 bg-primary p-0 text-[14px] leading-[22px] text-primary-foreground transition-opacity hover:opacity-90"
+        aria-label={`Remove photo ${index + 1}`}
       >
         ×
       </button>
       <p
-        style={{
-          marginTop: 6,
-          fontSize: 10,
-          color: "#666",
-          textTransform: "uppercase",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
+        className="mt-1.5 truncate text-[10px] uppercase text-muted-foreground"
         title={photo.file.name}
       >
         {photo.file.name}
@@ -192,8 +110,6 @@ function PhotoPreview({
     </div>
   );
 }
-
-// ─── Countries list ───────────────────────────────────────────────────────────
 
 const COUNTRIES = [
   "United Arab Emirates",
@@ -237,7 +153,7 @@ const ROLES = [
   { value: "INFLUENCERS", label: "Influencers" },
 ];
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+const optionClass = "bg-popover text-popover-foreground";
 
 export function ApplyNowForm() {
   const [form, setForm] = useState<FormData>({
@@ -338,57 +254,51 @@ export function ApplyNowForm() {
     setFormState("success");
   }
 
-  // ── Success ────────────────────────────────────────────────────────────────
+  const selectChevronStyle = { backgroundImage: "var(--bf-select-chevron)" } as const;
+
   if (formState === "success") {
     return (
-      <div style={{ background: "#fff", padding: "64px 0", textAlign: "center" }}>
-        <div
-          style={{
-            width: 56,
-            height: 56,
-            border: "1px solid #d8d8d8",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 24px",
-          }}
-        >
-          <svg viewBox="0 0 24 24" width={24} height={24} fill="none" stroke="#333" strokeWidth={1.5}>
+      <div className="border border-border bg-card px-6 py-16 text-center text-card-foreground md:px-10">
+        <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-border">
+          <svg viewBox="0 0 24 24" width={24} height={24} fill="none" stroke="currentColor" strokeWidth={1.5} className="text-foreground">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "#333", marginBottom: 8 }}>
+        <p className="mb-2 text-[13px] font-semibold uppercase tracking-[0.15em] text-foreground">
           Application Received
         </p>
-        <p style={{ fontSize: 13, color: "#898989" }}>
+        <p className="text-[13px] text-muted-foreground">
           Our team will review your profile within 5–7 working days.
         </p>
         <button
+          type="button"
           onClick={() => {
             setFormState("idle");
             photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
             setPhotos([]);
             setErrors({});
             setForm({
-              email: "", confirmEmail: "", firstName: "", lastName: "", gender: "",
-              dateOfBirth: "", nationality: "", ethnicity: "", countryOfResidence: "",
-              currentCountry: "", mobile: "", primaryLanguage: "", otherLanguage: "",
-              role: "", notes: "", instagramUrl: "", showreelUrl: "", agreedTerms: false,
+              email: "",
+              confirmEmail: "",
+              firstName: "",
+              lastName: "",
+              gender: "",
+              dateOfBirth: "",
+              nationality: "",
+              ethnicity: "",
+              countryOfResidence: "",
+              currentCountry: "",
+              mobile: "",
+              primaryLanguage: "",
+              otherLanguage: "",
+              role: "",
+              notes: "",
+              instagramUrl: "",
+              showreelUrl: "",
+              agreedTerms: false,
             });
           }}
-          style={{
-            marginTop: 32,
-            border: "1px solid #333",
-            background: "transparent",
-            padding: "10px 32px",
-            fontSize: 11,
-            fontWeight: 600,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            cursor: "pointer",
-            color: "#333",
-          }}
+          className="mt-8 border border-border bg-transparent px-8 py-2.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-foreground transition-opacity hover:opacity-80"
         >
           Apply Again
         </button>
@@ -396,167 +306,188 @@ export function ApplyNowForm() {
     );
   }
 
-  // ── Form ───────────────────────────────────────────────────────────────────
   return (
-    <div style={{ background: "#fff", fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}>
-
-      {/* Under-18 notice */}
-      <p style={{ fontSize: 12, color: "#898989", marginBottom: 24, lineHeight: 1.6 }}>
-        IF YOU ARE UNDER <strong style={{ color: "#333" }}>18 YEARS</strong> OLD, PLEASE ENSURE THAT THE EMAIL REGISTERED IS YOUR PARENTS&apos; AND THEY WILL NEED TO SIGN THE TERMS AND CONDITIONS
+    <div className="border border-border bg-card p-6 text-card-foreground md:p-10" style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}>
+      <p className="mb-6 text-[12px] leading-relaxed text-muted-foreground">
+        IF YOU ARE UNDER <strong className="font-semibold text-foreground">18 YEARS</strong> OLD, PLEASE ENSURE THAT THE
+        EMAIL REGISTERED IS YOUR PARENTS&apos; AND THEY WILL NEED TO SIGN THE TERMS AND CONDITIONS
       </p>
 
-      {/* Error banner */}
       {Object.keys(errors).length > 0 && (
-        <div style={{ background: "#fff3cd", border: "1px solid #ffc107", padding: "12px 16px", marginBottom: 24, fontSize: 12, color: "#333", textTransform: "uppercase" }}>
+        <div className="mb-6 border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-[12px] uppercase text-foreground">
           Please correct the errors below before submitting.
         </div>
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-
-        {/* ── PERSONAL DETAILS ───────────────────────────────────────────────── */}
         <SectionTitle>Personal Details</SectionTitle>
 
         <Field label="Email Address *" error={errors.email}>
-          <input name="email" type="email" value={form.email} onChange={handleChange}
-            placeholder="EMAIL ADDRESS" style={inputStyle} />
+          <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="EMAIL ADDRESS" className={inputClass} />
         </Field>
 
         <Field label="Re-Enter Email Address *" error={errors.confirmEmail}>
-          <input name="confirmEmail" type="email" value={form.confirmEmail} onChange={handleChange}
-            placeholder="RE ENTER YOUR EMAIL ADDRESS FOR CONFIRMATION" style={inputStyle} />
+          <input
+            name="confirmEmail"
+            type="email"
+            value={form.confirmEmail}
+            onChange={handleChange}
+            placeholder="RE ENTER YOUR EMAIL ADDRESS FOR CONFIRMATION"
+            className={inputClass}
+          />
         </Field>
 
         <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
           <Field label="First Name *" error={errors.firstName}>
-            <input name="firstName" type="text" value={form.firstName} onChange={handleChange}
-              placeholder="FIRST NAME" style={inputStyle} />
+            <input name="firstName" type="text" value={form.firstName} onChange={handleChange} placeholder="FIRST NAME" className={inputClass} />
           </Field>
           <Field label="Last Name *" error={errors.lastName}>
-            <input name="lastName" type="text" value={form.lastName} onChange={handleChange}
-              placeholder="LAST NAME" style={inputStyle} />
+            <input name="lastName" type="text" value={form.lastName} onChange={handleChange} placeholder="LAST NAME" className={inputClass} />
           </Field>
           <Field label="Gender *" error={errors.gender}>
-            <select name="gender" value={form.gender} onChange={handleChange} style={selectStyle}>
-              <option value="" disabled>GENDER</option>
-              <option value="FEMALE">Female</option>
-              <option value="MALE">Male</option>
-              <option value="NON_BINARY">Non-binary</option>
-              <option value="PREFER_NOT">Prefer not to say</option>
+            <select name="gender" value={form.gender} onChange={handleChange} className={selectClass} style={selectChevronStyle}>
+              <option value="" disabled className={optionClass}>
+                GENDER
+              </option>
+              <option value="FEMALE" className={optionClass}>
+                Female
+              </option>
+              <option value="MALE" className={optionClass}>
+                Male
+              </option>
+              <option value="NON_BINARY" className={optionClass}>
+                Non-binary
+              </option>
+              <option value="PREFER_NOT" className={optionClass}>
+                Prefer not to say
+              </option>
             </select>
           </Field>
           <Field label="Date of Birth" error={errors.dateOfBirth}>
-            <input name="dateOfBirth" type="date" value={form.dateOfBirth} onChange={handleChange}
-              style={{ ...inputStyle, colorScheme: "light" as const }} />
+            <input
+              name="dateOfBirth"
+              type="date"
+              value={form.dateOfBirth}
+              onChange={handleChange}
+              className={`${inputClass} [color-scheme:light] dark:[color-scheme:dark]`}
+            />
           </Field>
           <Field label="Nationality *" error={errors.nationality}>
-            <select name="nationality" value={form.nationality} onChange={handleChange} style={selectStyle}>
-              <option value="" disabled>NATIONALITY</option>
-              <option>Emirati</option>
-              <option>Saudi Arabian</option>
-              <option>Kuwaiti</option>
-              <option>Qatari</option>
-              <option>Bahraini</option>
-              <option>Omani</option>
-              <option>Jordanian</option>
-              <option>Lebanese</option>
-              <option>Egyptian</option>
-              <option>British</option>
-              <option>American</option>
-              <option>French</option>
-              <option>Brazilian</option>
-              <option>Other</option>
+            <select name="nationality" value={form.nationality} onChange={handleChange} className={selectClass} style={selectChevronStyle}>
+              <option value="" disabled className={optionClass}>
+                NATIONALITY
+              </option>
+              <option className={optionClass}>Emirati</option>
+              <option className={optionClass}>Saudi Arabian</option>
+              <option className={optionClass}>Kuwaiti</option>
+              <option className={optionClass}>Qatari</option>
+              <option className={optionClass}>Bahraini</option>
+              <option className={optionClass}>Omani</option>
+              <option className={optionClass}>Jordanian</option>
+              <option className={optionClass}>Lebanese</option>
+              <option className={optionClass}>Egyptian</option>
+              <option className={optionClass}>British</option>
+              <option className={optionClass}>American</option>
+              <option className={optionClass}>French</option>
+              <option className={optionClass}>Brazilian</option>
+              <option className={optionClass}>Other</option>
             </select>
           </Field>
           <Field label="Ethnicity" error={errors.ethnicity}>
-            <select name="ethnicity" value={form.ethnicity} onChange={handleChange} style={selectStyle}>
-              <option value="" disabled>ETHNICITY</option>
-              <option>Arab</option>
-              <option>Asian</option>
-              <option>Black</option>
-              <option>Mediterranean</option>
-              <option>Multi-ethnic</option>
-              <option>White</option>
-              <option>Other</option>
+            <select name="ethnicity" value={form.ethnicity} onChange={handleChange} className={selectClass} style={selectChevronStyle}>
+              <option value="" disabled className={optionClass}>
+                ETHNICITY
+              </option>
+              <option className={optionClass}>Arab</option>
+              <option className={optionClass}>Asian</option>
+              <option className={optionClass}>Black</option>
+              <option className={optionClass}>Mediterranean</option>
+              <option className={optionClass}>Multi-ethnic</option>
+              <option className={optionClass}>White</option>
+              <option className={optionClass}>Other</option>
             </select>
           </Field>
         </div>
 
-        {/* ── CONTACT DETAILS ────────────────────────────────────────────────── */}
         <SectionTitle>Contact Details</SectionTitle>
 
         <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
           <Field label="Country of Residence *" error={errors.countryOfResidence}>
-            <select name="countryOfResidence" value={form.countryOfResidence} onChange={handleChange} style={selectStyle}>
-              <option value="" disabled>COUNTRY OF RESIDENCE</option>
-              {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
+            <select name="countryOfResidence" value={form.countryOfResidence} onChange={handleChange} className={selectClass} style={selectChevronStyle}>
+              <option value="" disabled className={optionClass}>
+                COUNTRY OF RESIDENCE
+              </option>
+              {COUNTRIES.map((c) => (
+                <option key={c} className={optionClass}>
+                  {c}
+                </option>
+              ))}
             </select>
           </Field>
           <Field label="WhatsApp Number *" error={errors.mobile}>
-            <input name="mobile" type="tel" value={form.mobile} onChange={handleChange}
-              placeholder="WHATSAPP NUMBER" style={inputStyle} />
+            <input name="mobile" type="tel" value={form.mobile} onChange={handleChange} placeholder="WHATSAPP NUMBER" className={inputClass} />
           </Field>
           <Field label="Currently in Which Country?" error={errors.currentCountry}>
-            <select name="currentCountry" value={form.currentCountry} onChange={handleChange} style={selectStyle}>
-              <option value="" disabled>CURRENTLY IN WHICH COUNTRY?</option>
-              {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
+            <select name="currentCountry" value={form.currentCountry} onChange={handleChange} className={selectClass} style={selectChevronStyle}>
+              <option value="" disabled className={optionClass}>
+                CURRENTLY IN WHICH COUNTRY?
+              </option>
+              {COUNTRIES.map((c) => (
+                <option key={c} className={optionClass}>
+                  {c}
+                </option>
+              ))}
             </select>
           </Field>
         </div>
 
-        {/* ── LANGUAGES ──────────────────────────────────────────────────────── */}
         <SectionTitle>Languages</SectionTitle>
 
         <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
           <Field label="My Primary Language *" error={errors.primaryLanguage}>
-            <select name="primaryLanguage" value={form.primaryLanguage} onChange={handleChange} style={selectStyle}>
-              <option value="" disabled>MY PRIMARY LANGUAGE</option>
-              {LANGUAGES.map((l) => <option key={l}>{l}</option>)}
+            <select name="primaryLanguage" value={form.primaryLanguage} onChange={handleChange} className={selectClass} style={selectChevronStyle}>
+              <option value="" disabled className={optionClass}>
+                MY PRIMARY LANGUAGE
+              </option>
+              {LANGUAGES.map((l) => (
+                <option key={l} className={optionClass}>
+                  {l}
+                </option>
+              ))}
             </select>
           </Field>
           <Field label="Other Fluent Languages" error={errors.otherLanguage}>
-            <select name="otherLanguage" value={form.otherLanguage} onChange={handleChange} style={selectStyle}>
-              <option value="">OTHER FLUENT LANGUAGES</option>
-              {LANGUAGES.map((l) => <option key={l}>{l}</option>)}
+            <select name="otherLanguage" value={form.otherLanguage} onChange={handleChange} className={selectClass} style={selectChevronStyle}>
+              <option value="" className={optionClass}>
+                OTHER FLUENT LANGUAGES
+              </option>
+              {LANGUAGES.map((l) => (
+                <option key={l} className={optionClass}>
+                  {l}
+                </option>
+              ))}
             </select>
           </Field>
         </div>
 
-        {/* ── ROLE SELECTION ─────────────────────────────────────────────────── */}
         <SectionTitle>Please Select Role</SectionTitle>
 
         {errors.role && (
-          <p style={{ color: "red", fontSize: 11, textTransform: "uppercase", marginBottom: 12 }}>
-            {errors.role}
-          </p>
+          <p className="mb-3 text-[11px] font-normal uppercase text-destructive">{errors.role}</p>
         )}
 
         <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
           <div>
-            <p style={{ fontSize: 11, fontWeight: 600, color: "#898989", textTransform: "uppercase", marginBottom: 12 }}>
-              SELECT YOUR FIRST PREFERENCE
-            </p>
+            <p className="mb-3 text-[11px] font-semibold uppercase text-muted-foreground">SELECT YOUR FIRST PREFERENCE</p>
             {ROLES.map(({ value, label }) => (
-              <label
-                key={value}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  marginBottom: 12,
-                  cursor: "pointer",
-                  fontSize: 13,
-                  color: "#333",
-                  textTransform: "uppercase",
-                }}
-              >
+              <label key={value} className="mb-3 flex cursor-pointer items-center gap-2.5 text-[13px] uppercase text-foreground">
                 <input
                   type="radio"
                   name="role"
                   value={value}
                   checked={form.role === value}
                   onChange={handleChange}
-                  style={{ width: 16, height: 16, cursor: "pointer", accentColor: "#333" }}
+                  className="h-4 w-4 shrink-0 cursor-pointer accent-primary"
                 />
                 {label}
               </label>
@@ -564,69 +495,43 @@ export function ApplyNowForm() {
           </div>
 
           <div>
-            <p style={{ fontSize: 11, fontWeight: 600, color: "#898989", textTransform: "uppercase", marginBottom: 12 }}>
+            <p className="mb-3 text-[11px] font-semibold uppercase text-muted-foreground">
               PLEASE COMMENT IF YOU FIT MORE THAN ONE ROLE
             </p>
-            <textarea
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              rows={6}
-              style={{
-                width: "100%",
-                border: "1px solid #878787",
-                padding: "10px 12px",
-                fontSize: 13,
-                fontFamily: "inherit",
-                color: "#333",
-                resize: "vertical",
-                outline: "none",
-                boxSizing: "border-box",
-              }}
-            />
+            <textarea name="notes" value={form.notes} onChange={handleChange} rows={6} className={textareaClass} />
           </div>
         </div>
 
-        {/* ── SOCIAL LINKS ───────────────────────────────────────────────────── */}
-        <div style={{ borderTop: "1px solid #d8d8d8", marginTop: 24, paddingTop: 20 }} />
+        <div className="mt-6 border-t border-border pt-5" />
 
         <Field label="Instagram URL" error={errors.instagramUrl}>
-          <input name="instagramUrl" type="url" value={form.instagramUrl} onChange={handleChange}
-            placeholder="INSTAGRAM URL" style={inputStyle} />
+          <input name="instagramUrl" type="url" value={form.instagramUrl} onChange={handleChange} placeholder="INSTAGRAM URL" className={inputClass} />
         </Field>
 
         <Field label="Showreel URL (YouTube, Vimeo, etc.)" error={errors.showreelUrl}>
-          <input name="showreelUrl" type="url" value={form.showreelUrl} onChange={handleChange}
-            placeholder="SHOWREEL URL" style={inputStyle} />
+          <input name="showreelUrl" type="url" value={form.showreelUrl} onChange={handleChange} placeholder="SHOWREEL URL" className={inputClass} />
         </Field>
 
-        {/* ── PHOTO UPLOAD ───────────────────────────────────────────────────── */}
-        <div style={{ borderTop: "1px solid #d8d8d8", marginTop: 8, paddingTop: 20 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#333", textTransform: "uppercase", marginBottom: 8 }}>
-            Upload Pictures
-          </p>
-          <p style={{ fontSize: 11, color: "#898989", textTransform: "uppercase", marginBottom: 16, lineHeight: 1.6 }}>
-            PLEASE UPLOAD FOUR PHOTOS AS PER THE EXAMPLES BELOW.<br />
-            ONLY UPLOAD HEADSHOTS AGAINST WHITE WALL, FULL BODY AND HALF BODY PHOTOS.<br />
+        <div className="mt-2 border-t border-border pt-5">
+          <p className="mb-2 text-[13px] font-semibold uppercase text-foreground">Upload Pictures</p>
+          <p className="mb-4 text-[11px] uppercase leading-relaxed text-muted-foreground">
+            PLEASE UPLOAD FOUR PHOTOS AS PER THE EXAMPLES BELOW.
+            <br />
+            ONLY UPLOAD HEADSHOTS AGAINST WHITE WALL, FULL BODY AND HALF BODY PHOTOS.
+            <br />
             ONLY JPG, JPEG, AND PNG FILES ALLOWED — MAX 2 MB PER PHOTO. ONLY FOUR IMAGES ACCEPTED.
           </p>
 
-          {errors.photos && (
-            <p style={{ color: "red", fontSize: 11, textTransform: "uppercase", marginBottom: 12 }}>
-              {errors.photos}
-            </p>
-          )}
+          {errors.photos && <p className="mb-3 text-[11px] uppercase text-destructive">{errors.photos}</p>}
 
-          {/* Preview grid */}
           {photos.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
+            <div className="mb-4 flex flex-wrap gap-3">
               {photos.map((photo, i) => (
                 <PhotoPreview key={photo.previewUrl} photo={photo} index={i} onRemove={() => removePhoto(i)} />
               ))}
             </div>
           )}
 
-          {/* Dropzone */}
           {photos.length < 4 && (
             <div
               onClick={() => fileInputRef.current?.click()}
@@ -635,21 +540,9 @@ export function ApplyNowForm() {
                 e.preventDefault();
                 handleFiles(e.dataTransfer.files);
               }}
-              style={{
-                height: 140,
-                background: "#ececec",
-                color: "#898989",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                fontSize: 14,
-                textTransform: "uppercase",
-                userSelect: "none",
-              }}
+              className="flex h-[140px] cursor-pointer select-none flex-col items-center justify-center bg-muted text-[14px] uppercase text-muted-foreground transition-colors hover:bg-muted/80"
             >
-              <span style={{ fontSize: 36, marginBottom: 8, lineHeight: 1 }}>+</span>
+              <span className="mb-2 text-[36px] leading-none">+</span>
               Add Picture
             </div>
           )}
@@ -659,30 +552,19 @@ export function ApplyNowForm() {
             type="file"
             accept=".jpg,.jpeg,.png,image/jpeg,image/png"
             multiple
-            style={{ display: "none" }}
+            className="hidden"
             onChange={(e) => handleFiles(e.target.files)}
           />
         </div>
 
-        {/* ── TERMS ──────────────────────────────────────────────────────────── */}
-        <div style={{ borderTop: "1px solid #d8d8d8", margin: "24px 0", paddingTop: 20 }}>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 10,
-              cursor: "pointer",
-              fontSize: 12,
-              color: "#333",
-              textTransform: "uppercase",
-            }}
-          >
+        <div className="my-6 border-t border-border pt-5">
+          <label className="flex cursor-pointer items-start gap-2.5 text-[12px] uppercase text-foreground">
             <input
               type="checkbox"
               name="agreedTerms"
               checked={form.agreedTerms}
               onChange={handleChange}
-              style={{ width: 16, height: 16, marginTop: 1, flexShrink: 0, cursor: "pointer", accentColor: "#333" }}
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-primary"
             />
             <span>
               Please select the check box if you agree to our{" "}
@@ -690,7 +572,7 @@ export function ApplyNowForm() {
                 href="http://www.bareface.com/terms-and-conditions/"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: "#333", textDecoration: "underline" }}
+                className="text-foreground underline underline-offset-2 transition-opacity hover:opacity-80"
               >
                 Terms and Conditions
               </a>
@@ -698,34 +580,18 @@ export function ApplyNowForm() {
             </span>
           </label>
           {errors.agreedTerms && (
-            <p style={{ color: "red", fontSize: 11, textTransform: "uppercase", marginTop: 8 }}>
-              {errors.agreedTerms}
-            </p>
+            <p className="mt-2 text-[11px] uppercase text-destructive">{errors.agreedTerms}</p>
           )}
         </div>
 
-        {/* ── SUBMIT ─────────────────────────────────────────────────────────── */}
-        <div style={{ paddingBottom: 48 }}>
+        <div className="pb-12">
           <input
             type="submit"
             disabled={formState === "loading"}
             value={formState === "loading" ? "SUBMITTING..." : "SUBMIT"}
-            style={{
-              background: "#333",
-              color: "#fff",
-              border: "none",
-              padding: "14px 48px",
-              fontSize: 13,
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              cursor: formState === "loading" ? "not-allowed" : "pointer",
-              opacity: formState === "loading" ? 0.6 : 1,
-              fontFamily: "inherit",
-            }}
+            className="cursor-pointer border-0 bg-primary px-12 py-3.5 font-sans text-[13px] font-semibold uppercase tracking-[0.1em] text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-60"
           />
         </div>
-
       </form>
     </div>
   );

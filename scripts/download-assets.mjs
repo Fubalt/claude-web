@@ -81,12 +81,6 @@ const featuredImages = [
   { url: 'https://cdn.portfoliopad.com/images/10884/2971907/Xlarge/077.jpg', dest: `${BASE_DIR}images/featured/vitoria.jpg` },
 ];
 
-// Instagram images - these are CDN URLs that may expire; using best-effort
-// Actual IG images use signed CDN URLs - we capture a few representative ones
-const instagramImages = [
-  'https://scontent-lhr6-1.cdninstagram.com/v/t51.82787-15/671184968_18583979644015238_1461202043464576',
-].map((url, i) => ({ url, dest: `${BASE_DIR}images/instagram/ig_${i + 1}.jpg` }));
-
 console.log('Downloading fonts...');
 await downloadBatch(fonts);
 
