@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Application {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Personal info
+  email         String   @unique
+  firstName     String
+  lastName      String
+  gender        String
+  dateOfBirth   String?
+  nationality   String
+  ethnicity     String?
+  countryOfResidence String
+  currentCountry String?
+  mobile        String
+
+  // Languages
+  primaryLanguage String
+  otherLanguage   String?
+
+  // Role & Social
+  role          String   // MODEL, LIFESTYLE, CAST, STYLIST, HAIR_MAKEUP, PHOTOGRAPHERS, INFLUENCERS
+  notes         String?
+  instagramUrl  String?
+  showreelUrl   String?
+
+  // Photos (stored as JSON array of base64 or URLs)
+  photos        Json     @default("[]")
+
+  // Admin fields
+  status        ApplicationStatus @default(PENDING) // PENDING, APPROVED, REJECTED
+  adminNotes    String?
+  reviewedAt    DateTime?
+  reviewedBy    String?
+
+  // For displaying on roster
+  displayName   String?
+  displayBio    String?
+
+  @@index([email])
+  @@index([status])
+  @@index([role])
+  @@index([createdAt])
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

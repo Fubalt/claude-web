@@ -250,8 +250,43 @@ export function ApplyNowForm() {
       return;
     }
     setFormState("loading");
-    await new Promise((r) => setTimeout(r, 1000));
-    setFormState("success");
+
+    try {
+      // Convert photos to base64
+      const photosBase64: string[] = [];
+      for (const photo of photos) {
+        const reader = new FileReader();
+        const base64 = await new Promise<string>((resolve) => {
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(photo.file);
+        });
+        photosBase64.push(base64);
+      }
+
+      const response = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          photos: photosBase64,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        setErrors({ email: error.error || "Submission failed" });
+        setFormState("idle");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      setFormState("success");
+    } catch (error) {
+      console.error("Submit error:", error);
+      setErrors({ email: "Network error. Please try again." });
+      setFormState("idle");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   const selectChevronStyle = { backgroundImage: "var(--bf-select-chevron)" } as const;
