@@ -194,8 +194,15 @@ const DRAWER_TRANSITION_MS = 320;
 export function Header() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerActive, setDrawerActive] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const unmountAfterCloseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const clearCloseUnmountTimer = useCallback(() => {
     if (unmountAfterCloseRef.current !== null) {
@@ -264,7 +271,14 @@ export function Header() {
 
   return (
     <>
-      <header className="relative z-50 h-[70px] border-b border-border/80 bg-background text-foreground">
+      <header
+        className="fixed top-0 left-0 right-0 z-50 h-[70px] border-b border-border/80 text-foreground transition-all duration-300"
+        style={{
+          backgroundColor: scrolled ? "color-mix(in srgb, var(--background) 80%, transparent)" : "var(--background)",
+          backdropFilter: scrolled ? "blur(14px) saturate(1.4)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(14px) saturate(1.4)" : "none",
+        }}
+      >
         <div className="mx-auto flex h-16 max-w-[1512px] items-center gap-6 px-6">
           <div className="flex items-center gap-2 sm:gap-3">
             <button
@@ -334,7 +348,6 @@ export function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex text-foreground opacity-80 transition-opacity hover:opacity-100"
-                aria-label="WhatsApp"
               >
                 <WhatsAppIcon />
               </a>
@@ -343,7 +356,6 @@ export function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex text-foreground opacity-80 transition-opacity hover:opacity-100"
-                aria-label="Instagram"
               >
                 <InstagramIcon />
               </a>
@@ -361,6 +373,9 @@ export function Header() {
           </Link>
         </div>
       </header>
+
+      {/* Spacer to compensate for fixed header */}
+      <div className="h-[70px]" />
 
       {drawerVisible && (
         <div
