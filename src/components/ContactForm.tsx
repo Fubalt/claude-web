@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type FormState = "idle" | "loading" | "success" | "error";
+type FormState = "idle" | "loading" | "success";
 
 export function ContactForm() {
   const [state, setState] = useState<FormState>("idle");
@@ -26,9 +26,7 @@ export function ContactForm() {
   }
 
   function handleChange(
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -45,114 +43,37 @@ export function ContactForm() {
       return;
     }
     setState("loading");
-    // Simulate submission (replace with real API call)
     await new Promise((r) => setTimeout(r, 1200));
     setState("success");
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    backgroundColor: "transparent",
-    border: "none",
-    borderBottom: "1px solid rgba(232, 230, 227, 0.3)",
-    color: "#e8e6e3",
-    fontFamily: "Radikal, sans-serif",
-    fontSize: 16,
-    fontWeight: 250,
-    padding: "12px 0",
-    outline: "none",
-    transition: "border-color 0.2s ease",
-  };
+  const inputClass =
+    "w-full border-0 border-b border-border/40 bg-transparent py-3 font-sans text-[16px] font-[250] text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-foreground";
 
-  const labelStyle: React.CSSProperties = {
-    display: "block",
-    fontFamily: "Radikal, sans-serif",
-    fontSize: 12,
-    fontWeight: 250,
-    color: "rgba(232, 230, 227, 0.6)",
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-    marginBottom: 4,
-  };
+  const labelClass =
+    "mb-1 block font-sans text-[12px] font-[250] uppercase tracking-[0.1em] text-muted-foreground";
 
-  const errorStyle: React.CSSProperties = {
-    fontFamily: "Radikal, sans-serif",
-    fontSize: 12,
-    color: "#ff6b6b",
-    marginTop: 4,
-  };
+  const errorClass = "mt-1 font-sans text-[12px] text-destructive";
 
   if (state === "success") {
     return (
-      <div
-        style={{
-          textAlign: "center",
-          padding: "80px 24px",
-        }}
-      >
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: "50%",
-            border: "1px solid #e8e6e3",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "0 auto 24px",
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            width="28"
-            height="28"
-            fill="none"
-            stroke="#e8e6e3"
-            strokeWidth="2"
-          >
+      <div className="px-0 py-16 text-center md:py-20">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-border">
+          <svg viewBox="0 0 24 24" width={28} height={28} fill="none" className="text-foreground" stroke="currentColor" strokeWidth={2}>
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <h3
-          style={{
-            fontFamily: '"Cassannet Plus"',
-            fontSize: 31,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            color: "#e8e6e3",
-            marginBottom: 16,
-          }}
-        >
-          Message Sent
-        </h3>
-        <p
-          style={{
-            fontFamily: "Radikal, sans-serif",
-            fontSize: 16,
-            fontWeight: 250,
-            color: "rgba(232, 230, 227, 0.7)",
-          }}
-        >
+        <h3 className="mb-4 font-heading text-[31px] font-bold uppercase text-foreground">Message Sent</h3>
+        <p className="font-sans text-[16px] font-[250] text-muted-foreground">
           Thank you for reaching out. We&apos;ll be in touch shortly.
         </p>
         <button
+          type="button"
           onClick={() => {
             setState("idle");
             setForm({ name: "", email: "", phone: "", subject: "", message: "" });
           }}
-          style={{
-            marginTop: 40,
-            fontFamily: '"Cassannet Plus"',
-            fontSize: 15,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            color: "#e8e6e3",
-            backgroundColor: "transparent",
-            border: "1px solid rgba(232, 230, 227, 0.4)",
-            padding: "14px 32px",
-            cursor: "pointer",
-            letterSpacing: "0.05em",
-          }}
+          className="mt-10 border border-border px-8 py-3.5 font-heading text-[15px] font-bold uppercase tracking-wide text-foreground transition-opacity hover:opacity-80"
         >
           Send Another
         </button>
@@ -162,11 +83,9 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <div
-        className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2"
-      >
+      <div className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
         <div>
-          <label htmlFor="name" style={labelStyle}>
+          <label htmlFor="name" className={labelClass}>
             Full Name *
           </label>
           <input
@@ -176,19 +95,13 @@ export function ContactForm() {
             value={form.name}
             onChange={handleChange}
             placeholder="Your full name"
-            style={{
-              ...inputStyle,
-              borderBottomColor: errors.name
-                ? "#ff6b6b"
-                : "rgba(232, 230, 227, 0.3)",
-            }}
-            className="focus:border-b-[#e8e6e3]"
+            className={`${inputClass} ${errors.name ? "border-destructive" : ""}`}
           />
-          {errors.name && <p style={errorStyle}>{errors.name}</p>}
+          {errors.name && <p className={errorClass}>{errors.name}</p>}
         </div>
 
         <div>
-          <label htmlFor="email" style={labelStyle}>
+          <label htmlFor="email" className={labelClass}>
             Email Address *
           </label>
           <input
@@ -198,19 +111,13 @@ export function ContactForm() {
             value={form.email}
             onChange={handleChange}
             placeholder="your@email.com"
-            style={{
-              ...inputStyle,
-              borderBottomColor: errors.email
-                ? "#ff6b6b"
-                : "rgba(232, 230, 227, 0.3)",
-            }}
-            className="focus:border-b-[#e8e6e3]"
+            className={`${inputClass} ${errors.email ? "border-destructive" : ""}`}
           />
-          {errors.email && <p style={errorStyle}>{errors.email}</p>}
+          {errors.email && <p className={errorClass}>{errors.email}</p>}
         </div>
 
         <div>
-          <label htmlFor="phone" style={labelStyle}>
+          <label htmlFor="phone" className={labelClass}>
             Phone Number
           </label>
           <input
@@ -220,13 +127,12 @@ export function ContactForm() {
             value={form.phone}
             onChange={handleChange}
             placeholder="+971 50 000 0000"
-            style={inputStyle}
-            className="focus:border-b-[#e8e6e3]"
+            className={inputClass}
           />
         </div>
 
         <div>
-          <label htmlFor="subject" style={labelStyle}>
+          <label htmlFor="subject" className={labelClass}>
             Subject
           </label>
           <select
@@ -234,40 +140,32 @@ export function ContactForm() {
             name="subject"
             value={form.subject}
             onChange={handleChange}
-            style={{
-              ...inputStyle,
-              appearance: "none",
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23e8e6e3' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "right 4px center",
-              paddingRight: 24,
-              cursor: "pointer",
-            }}
-            className="focus:border-b-[#e8e6e3]"
+            className={`${inputClass} cursor-pointer appearance-none bg-[length:12px] bg-[right_4px_center] bg-no-repeat pr-7`}
+            style={{ backgroundImage: "var(--bf-select-chevron)" }}
           >
-            <option value="" style={{ backgroundColor: "#181a1b" }}>
+            <option value="" className="bg-popover text-popover-foreground">
               Select a subject
             </option>
-            <option value="booking" style={{ backgroundColor: "#181a1b" }}>
+            <option value="booking" className="bg-popover text-popover-foreground">
               Talent Booking
             </option>
-            <option value="models" style={{ backgroundColor: "#181a1b" }}>
+            <option value="models" className="bg-popover text-popover-foreground">
               Model Enquiry
             </option>
-            <option value="influencers" style={{ backgroundColor: "#181a1b" }}>
+            <option value="influencers" className="bg-popover text-popover-foreground">
               Influencer Campaign
             </option>
-            <option value="casting" style={{ backgroundColor: "#181a1b" }}>
+            <option value="casting" className="bg-popover text-popover-foreground">
               Casting
             </option>
-            <option value="other" style={{ backgroundColor: "#181a1b" }}>
+            <option value="other" className="bg-popover text-popover-foreground">
               Other
             </option>
           </select>
         </div>
 
-        <div style={{ gridColumn: "1 / -1" }}>
-          <label htmlFor="message" style={labelStyle}>
+        <div className="md:col-span-2">
+          <label htmlFor="message" className={labelClass}>
             Message *
           </label>
           <textarea
@@ -277,37 +175,17 @@ export function ContactForm() {
             value={form.message}
             onChange={handleChange}
             placeholder="Tell us about your project..."
-            style={{
-              ...inputStyle,
-              resize: "none",
-              borderBottomColor: errors.message
-                ? "#ff6b6b"
-                : "rgba(232, 230, 227, 0.3)",
-            }}
-            className="focus:border-b-[#e8e6e3]"
+            className={`${inputClass} resize-none ${errors.message ? "border-destructive" : ""}`}
           />
-          {errors.message && <p style={errorStyle}>{errors.message}</p>}
+          {errors.message && <p className={errorClass}>{errors.message}</p>}
         </div>
       </div>
 
-      <div style={{ marginTop: 48 }}>
+      <div className="mt-12">
         <button
           type="submit"
           disabled={state === "loading"}
-          style={{
-            fontFamily: '"Cassannet Plus"',
-            fontSize: 20,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            color: "#e8e6e3",
-            backgroundColor: state === "loading" ? "#282b2c" : "#000000",
-            padding: "22px 52px",
-            border: "none",
-            cursor: state === "loading" ? "not-allowed" : "pointer",
-            letterSpacing: "0.03em",
-            transition: "background-color 0.2s ease",
-            opacity: state === "loading" ? 0.7 : 1,
-          }}
+          className="border-none bg-primary px-[52px] py-[22px] font-heading text-[20px] font-bold uppercase tracking-wide text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-70"
         >
           {state === "loading" ? "Sending..." : "Send Message"}
         </button>

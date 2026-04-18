@@ -13,183 +13,74 @@ export default function ContactPage() {
   return (
     <>
       <Header />
-      <main style={{ backgroundColor: "#181a1b", minHeight: "calc(100vh - 70px)" }}>
-        {/* Page header */}
-        <div
-          style={{
-            borderBottom: "1px solid rgba(232, 230, 227, 0.1)",
-            padding: "64px 24px 48px",
-            maxWidth: 1512,
-            margin: "0 auto",
-          }}
-        >
-          <h1
-            style={{
-              fontFamily: '"Cassannet Plus"',
-              fontSize: 64,
-              fontWeight: 700,
-              textTransform: "uppercase",
-              color: "#e8e6e3",
-              lineHeight: 1,
-              marginBottom: 20,
-            }}
-          >
+      <main className="min-h-[calc(100vh-70px)] bg-background text-foreground">
+        <div className="mx-auto max-w-[1512px] border-b border-border/80 px-6 pb-12 pt-16">
+          <h1 className="mb-5 font-heading text-[clamp(2.5rem,6vw,4rem)] font-bold uppercase leading-none text-foreground">
             Contact Us
           </h1>
-          <p
-            style={{
-              fontFamily: "Radikal, sans-serif",
-              fontSize: 18,
-              fontWeight: 250,
-              color: "rgba(232, 230, 227, 0.7)",
-              maxWidth: 560,
-              lineHeight: 1.6,
-            }}
-          >
-            Based in Dubai since 2001. We connect brands with models, talent,
-            actors, stylists, influencers &amp; performers across the MENA
-            region.
+          <p className="max-w-[560px] font-sans text-[18px] font-[250] leading-relaxed text-muted-foreground">
+            Based in Dubai since 2001. We connect brands with models, talent, actors, stylists, influencers &amp;
+            performers across the MENA region.
           </p>
         </div>
 
-        {/* Two-column layout: form + info */}
-        <div
-          className="flex flex-col md:flex-row"
-          style={{
-            maxWidth: 1512,
-            margin: "0 auto",
-            padding: "64px 24px 100px",
-            gap: 80,
-          }}
-        >
-          {/* Form */}
-          <div style={{ flex: "1 1 0" }}>
+        <div className="mx-auto flex max-w-[1512px] flex-col gap-16 px-6 py-16 md:flex-row md:gap-20 md:py-24">
+          <div className="min-w-0 flex-1">
             <ContactForm />
           </div>
 
-          {/* Contact info sidebar */}
-          <div
-            style={{
-              width: "100%",
-              maxWidth: 320,
-              flexShrink: 0,
-            }}
-          >
-            <div style={{ marginBottom: 48 }}>
-              <p
-                style={{
-                  fontFamily: '"Cassannet Plus"',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  color: "rgba(232, 230, 227, 0.5)",
-                  marginBottom: 12,
-                }}
-              >
+          <aside className="w-full max-w-[320px] shrink-0">
+            <div className="mb-12">
+              <p className="mb-3 font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Office
               </p>
-              <p
-                style={{
-                  fontFamily: "Radikal, sans-serif",
-                  fontSize: 16,
-                  fontWeight: 250,
-                  color: "#e8e6e3",
-                  lineHeight: 1.7,
-                }}
-              >
-                Building 10 (BBC Bldg)<br />
-                Office 312<br />
+              <p className="font-sans text-[16px] font-[250] leading-[1.7] text-foreground">
+                Building 10 (BBC Bldg)
+                <br />
+                Office 312
+                <br />
                 Dubai Media City, UAE
               </p>
             </div>
 
-            <div style={{ marginBottom: 48 }}>
-              <p
-                style={{
-                  fontFamily: '"Cassannet Plus"',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  color: "rgba(232, 230, 227, 0.5)",
-                  marginBottom: 12,
-                }}
-              >
+            <div className="mb-12">
+              <p className="mb-3 font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Phone
               </p>
               <a
                 href="tel:+971505919770"
-                style={{
-                  fontFamily: "Radikal, sans-serif",
-                  fontSize: 16,
-                  fontWeight: 250,
-                  color: "#e8e6e3",
-                  textDecoration: "none",
-                }}
+                className="font-sans text-[16px] font-[250] text-foreground no-underline transition-opacity hover:opacity-80"
               >
                 +971 50 591 9770
               </a>
             </div>
 
-            <div style={{ marginBottom: 48 }}>
-              <p
-                style={{
-                  fontFamily: '"Cassannet Plus"',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  color: "rgba(232, 230, 227, 0.5)",
-                  marginBottom: 12,
-                }}
-              >
+            <div className="mb-12">
+              <p className="mb-3 font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Email
               </p>
               <a
                 href="mailto:hello@bareface.com"
-                style={{
-                  fontFamily: "Radikal, sans-serif",
-                  fontSize: 16,
-                  fontWeight: 250,
-                  color: "#e8e6e3",
-                  textDecoration: "none",
-                }}
+                className="font-sans text-[16px] font-[250] text-foreground no-underline transition-opacity hover:opacity-80"
               >
                 hello@bareface.com
               </a>
             </div>
 
             <div>
-              <p
-                style={{
-                  fontFamily: '"Cassannet Plus"',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
-                  color: "rgba(232, 230, 227, 0.5)",
-                  marginBottom: 12,
-                }}
-              >
+              <p className="mb-3 font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 WhatsApp
               </p>
               <a
                 href="https://wa.me/+971505919770?text=Ask+us+anything"
                 target="_blank"
                 rel="noreferrer"
-                style={{
-                  fontFamily: "Radikal, sans-serif",
-                  fontSize: 16,
-                  fontWeight: 250,
-                  color: "#e8e6e3",
-                  textDecoration: "none",
-                }}
+                className="font-sans text-[16px] font-[250] text-foreground no-underline transition-opacity hover:opacity-80"
               >
                 Message us directly
               </a>
             </div>
-          </div>
+          </aside>
         </div>
       </main>
       <Footer />

@@ -35,7 +35,7 @@ export function FeaturedCarousel() {
     <section className="mx-auto max-w-[1512px] px-6 py-12">
       <div className="mb-6 flex items-center justify-between">
         <h3
-          className="font-heading text-[31px] font-bold uppercase text-[#e8e6e3]"
+          className="font-heading text-[31px] font-bold uppercase text-foreground"
         >
           Featured
         </h3>
@@ -43,14 +43,14 @@ export function FeaturedCarousel() {
           <button
             onClick={scrollPrev}
             aria-label="Previous"
-            className="flex cursor-pointer items-center p-0 text-[#e8e6e3] transition-opacity hover:opacity-75"
+            className="flex cursor-pointer items-center p-0 text-foreground transition-opacity hover:opacity-75"
           >
             <ChevronLeft size={24} />
           </button>
           <button
             onClick={scrollNext}
             aria-label="Next"
-            className="flex cursor-pointer items-center p-0 text-[#e8e6e3] transition-opacity hover:opacity-75"
+            className="flex cursor-pointer items-center p-0 text-foreground transition-opacity hover:opacity-75"
           >
             <ChevronRight size={24} />
           </button>
@@ -77,20 +77,20 @@ export function FeaturedCarousel() {
               >
                 <a
                   href={model.href}
-                  className="font-heading text-[14px] uppercase text-[#e8e6e3] hover:underline"
+                  className="font-heading text-[14px] uppercase text-foreground hover:underline"
                 >
                   Portfolios
                 </a>
                 <a
                   href={model.href}
-                  className="font-heading text-[14px] uppercase text-[#e8e6e3] hover:underline"
+                  className="font-heading text-[14px] uppercase text-foreground hover:underline"
                 >
                   Models
                 </a>
               </div>
             </div>
             <div className="pt-2">
-              <p className="text-[16px] font-[250] text-[#e8e6e3]">
+              <p className="text-[16px] font-[250] text-foreground">
                 {model.name}
               </p>
             </div>

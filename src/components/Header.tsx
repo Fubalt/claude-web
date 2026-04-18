@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Heart, Menu, Music2, Search, X } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /** Desktop nav + drawer — labels match bareface.com; hrefs verified (200). */
 const NAV_MENU: { label: string; items: { label: string; href: string }[] }[] = [
@@ -80,15 +81,15 @@ const DRAWER_UTIL_LINKS: { label: string; href: string; internal: boolean }[] = 
 ];
 
 const submenuLinkClass =
-  "block whitespace-nowrap py-2.5 pl-5 pr-8 font-heading text-[13px] font-light uppercase tracking-[0.08em] text-[#e8e6e3] transition-opacity hover:opacity-70 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e8e6e3]/40";
+  "block whitespace-nowrap py-2.5 pl-5 pr-8 font-heading text-[13px] font-light uppercase tracking-[0.08em] text-foreground transition-opacity hover:opacity-70 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30";
 
 const drawerSubLinkClass =
-  "block font-heading text-[12px] font-light uppercase leading-relaxed tracking-[0.1em] text-[#e8e6e3]/95 transition-opacity hover:opacity-60 sm:text-[13px]";
+  "block font-heading text-[12px] font-light uppercase leading-relaxed tracking-[0.1em] text-foreground/95 transition-opacity hover:opacity-60 sm:text-[13px]";
 
 const drawerSectionTitleClass =
-  "mb-3 font-heading text-[14px] font-bold uppercase tracking-[0.14em] text-[#e8e6e3] sm:text-[15px]";
+  "mb-3 font-heading text-[14px] font-bold uppercase tracking-[0.14em] text-foreground sm:text-[15px]";
 
-const socialIconClass = "text-[#e8e6e3] opacity-85 transition-opacity hover:opacity-100";
+const socialIconClass = "text-foreground opacity-85 transition-opacity hover:opacity-100";
 const socialSize = 20;
 
 function WhatsAppIcon() {
@@ -159,7 +160,7 @@ function DrawerColumnSection({
 
 function DrawerSocialRow() {
   return (
-    <div className="flex flex-wrap items-center gap-4 border-t border-white/10 px-6 py-5">
+    <div className="flex flex-wrap items-center gap-4 border-t border-border/80 px-6 py-5">
       <a href="https://wa.me/+971505919770?text=Ask+us+anything" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex">
         <svg viewBox="0 0 24 24" fill="currentColor" width={socialSize} height={socialSize} className={socialIconClass}>
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -188,26 +189,48 @@ function DrawerSocialRow() {
   );
 }
 
+const DRAWER_TRANSITION_MS = 320;
+
 export function Header() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [drawerActive, setDrawerActive] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const unmountAfterCloseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearCloseUnmountTimer = useCallback(() => {
+    if (unmountAfterCloseRef.current !== null) {
+      clearTimeout(unmountAfterCloseRef.current);
+      unmountAfterCloseRef.current = null;
+    }
+  }, []);
+
+  const finishCloseUnmount = useCallback(() => {
+    clearCloseUnmountTimer();
+    setDrawerVisible(false);
+  }, [clearCloseUnmountTimer]);
 
   const closeDrawer = useCallback(() => {
     setDrawerActive(false);
-  }, []);
+    clearCloseUnmountTimer();
+    unmountAfterCloseRef.current = setTimeout(finishCloseUnmount, DRAWER_TRANSITION_MS);
+  }, [clearCloseUnmountTimer, finishCloseUnmount]);
 
   const openDrawer = useCallback(() => {
+    clearCloseUnmountTimer();
     setDrawerVisible(true);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setDrawerActive(true));
     });
-  }, []);
+  }, [clearCloseUnmountTimer]);
 
-  const handleAsideTransitionEnd = useCallback((e: React.TransitionEvent<HTMLDivElement>) => {
-    if (e.propertyName !== "transform") return;
-    if (!drawerActive) setDrawerVisible(false);
-  }, [drawerActive]);
+  const handleAsideTransitionEnd = useCallback(
+    (e: React.TransitionEvent<HTMLDivElement>) => {
+      if (e.target !== e.currentTarget) return;
+      if (e.propertyName !== "transform") return;
+      if (!drawerActive) finishCloseUnmount();
+    },
+    [drawerActive, finishCloseUnmount]
+  );
 
   useEffect(() => {
     if (!drawerVisible) return;
@@ -227,6 +250,8 @@ export function Header() {
     };
   }, [drawerVisible]);
 
+  useEffect(() => () => clearCloseUnmountTimer(), [clearCloseUnmountTimer]);
+
   useEffect(() => {
     if (drawerVisible && drawerActive) {
       closeButtonRef.current?.focus();
@@ -239,13 +264,13 @@ export function Header() {
 
   return (
     <>
-      <header className="relative z-50 h-[70px] border-b border-white/10 bg-[#181a1b] text-[#e8e6e3]">
+      <header className="relative z-50 h-[70px] border-b border-border/80 bg-background text-foreground">
         <div className="mx-auto flex h-16 max-w-[1512px] items-center gap-6 px-6">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={openDrawer}
-              className="flex cursor-pointer items-center p-1 text-[#e8e6e3] transition-opacity hover:opacity-70"
+              className="flex cursor-pointer items-center p-1 text-foreground transition-opacity hover:opacity-70"
               aria-label="Open menu"
               aria-expanded={drawerVisible && drawerActive}
               aria-controls="site-nav-drawer"
@@ -254,18 +279,19 @@ export function Header() {
             </button>
             <button
               type="button"
-              className="flex cursor-pointer items-center p-1 text-[#e8e6e3] transition-opacity hover:opacity-70"
+              className="flex cursor-pointer items-center p-1 text-foreground transition-opacity hover:opacity-70"
               aria-label="Search"
             >
               <Search size={20} />
             </button>
             <Link
               href="/favs"
-              className="flex items-center p-1 text-[#e8e6e3] transition-opacity hover:opacity-70"
+              className="flex items-center p-1 text-foreground transition-opacity hover:opacity-70"
               aria-label="Favourites"
             >
               <Heart size={20} />
             </Link>
+            <ThemeToggle />
           </div>
 
           <div className="hidden flex-1 items-center justify-between md:flex">
@@ -273,7 +299,7 @@ export function Header() {
               {NAV_MENU.map((column) => (
                 <div key={column.label} className="group relative">
                   <span
-                    className="flex cursor-default items-center gap-1 px-1.5 py-[5px] font-heading text-[14px] font-normal uppercase tracking-[0.04em] text-[#e8e6e3] lg:text-[15px]"
+                    className="flex cursor-default items-center gap-1 px-1.5 py-[5px] font-heading text-[14px] font-normal uppercase tracking-[0.04em] text-foreground lg:text-[15px]"
                     tabIndex={0}
                   >
                     {column.label}
@@ -288,7 +314,7 @@ export function Header() {
                     className="pointer-events-none invisible absolute left-0 top-full z-50 min-w-[10rem] pt-2 opacity-0 shadow-[4px_8px_24px_rgba(0,0,0,0.45)] transition-[opacity,visibility] duration-150 ease-out group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100"
                     role="presentation"
                   >
-                    <ul className="border-0 bg-[#181a1b] py-1" role="menu" aria-label={`${column.label} categories`}>
+                    <ul className="border-0 bg-background py-1" role="menu" aria-label={`${column.label} categories`}>
                       {column.items.map((item) => (
                         <li key={item.href} role="none">
                           <a role="menuitem" href={item.href} className={submenuLinkClass}>
@@ -307,7 +333,7 @@ export function Header() {
                 href="https://wa.me/+971505919770?text=Ask+us+anything"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex text-[#e8e6e3] opacity-80 transition-opacity hover:opacity-100"
+                className="flex text-foreground opacity-80 transition-opacity hover:opacity-100"
                 aria-label="WhatsApp"
               >
                 <WhatsAppIcon />
@@ -316,7 +342,7 @@ export function Header() {
                 href="https://www.instagram.com/bareface_model_agency/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex text-[#e8e6e3] opacity-80 transition-opacity hover:opacity-100"
+                className="flex text-foreground opacity-80 transition-opacity hover:opacity-100"
                 aria-label="Instagram"
               >
                 <InstagramIcon />
@@ -337,12 +363,16 @@ export function Header() {
       </header>
 
       {drawerVisible && (
-        <div className="fixed inset-0 z-[100]" aria-hidden={!drawerActive}>
+        <div
+          className="pointer-events-none fixed inset-0 z-[100]"
+          aria-hidden={!drawerActive}
+        >
+          {/* Parent is pointer-events-none so clicks reach the page; only backdrop + panel opt in */}
           <button
             type="button"
             aria-label="Close menu"
             className={`absolute inset-0 bg-black transition-opacity duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
-              drawerActive ? "opacity-[0.55] pointer-events-auto" : "pointer-events-none opacity-0"
+              drawerActive ? "pointer-events-auto opacity-[0.55]" : "pointer-events-none opacity-0"
             }`}
             onClick={closeDrawer}
           />
@@ -352,7 +382,7 @@ export function Header() {
             aria-modal="true"
             aria-label="Site navigation"
             onTransitionEnd={handleAsideTransitionEnd}
-            className={`absolute left-0 top-0 z-[101] flex h-full max-h-dvh w-[min(100%,22rem)] flex-col bg-[#181a1b] text-[#e8e6e3] shadow-[12px_0_48px_rgba(0,0,0,0.35)] transition-[transform] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] sm:w-[min(42vw,28rem)] md:w-[min(34vw,30rem)] ${
+            className={`pointer-events-auto absolute left-0 top-0 z-[101] flex h-full max-h-dvh w-[min(100%,22rem)] flex-col bg-background text-foreground shadow-[12px_0_48px_rgba(0,0,0,0.35)] transition-[transform] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] dark:shadow-[12px_0_48px_rgba(0,0,0,0.55)] sm:w-[min(42vw,28rem)] md:w-[min(34vw,30rem)] ${
               drawerActive ? "translate-x-0" : "-translate-x-full"
             }`}
           >
@@ -361,7 +391,7 @@ export function Header() {
                 ref={closeButtonRef}
                 type="button"
                 onClick={closeDrawer}
-                className="flex cursor-pointer items-center p-1 text-[#e8e6e3] transition-opacity hover:opacity-70"
+                className="flex cursor-pointer items-center p-1 text-foreground transition-opacity hover:opacity-70"
                 aria-label="Close menu"
               >
                 <X size={24} strokeWidth={1.5} />
@@ -374,7 +404,7 @@ export function Header() {
                   {DRAWER_LEFT.map((col) => (
                     <DrawerColumnSection key={col.label} column={col} onNavigate={onDrawerLinkClick} />
                   ))}
-                  <div className="mt-2 border-t border-white/10 pt-6">
+                  <div className="mt-2 border-t border-border/80 pt-6">
                     <ul className="flex flex-col gap-2.5">
                       {DRAWER_UTIL_LINKS.map((link) => (
                         <li key={link.label}>

@@ -44,7 +44,7 @@ export function HeroCarousel() {
 
       <button
         onClick={() => window.scrollBy({ top: window.innerHeight, behavior: "smooth" })}
-        className="absolute bottom-[45px] left-1/2 flex h-[50px] w-[50px] -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border border-[#e8e6e3] bg-transparent text-[#e8e6e3] transition-opacity hover:opacity-75"
+        className="absolute bottom-[45px] left-1/2 flex h-[50px] w-[50px] -translate-x-1/2 cursor-pointer items-center justify-center rounded-full border border-foreground/90 bg-transparent text-foreground transition-opacity hover:opacity-75"
         aria-label="Scroll to next section"
       >
         <ChevronDown size={20} />

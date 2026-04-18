@@ -20,10 +20,10 @@ export function InstagramGrid() {
   return (
     <section>
       <div className="flex items-center justify-between px-6 pb-4">
-        <p className="text-[16px] font-[250] text-[#e8e6e3]">
+        <p className="text-[16px] font-[250] text-foreground">
           @bareface_model_agency
         </p>
-        <h3 className="font-heading text-[31px] font-bold uppercase text-[#e8e6e3]">
+        <h3 className="font-heading text-[31px] font-bold uppercase text-foreground">
           Instagram
         </h3>
       </div>

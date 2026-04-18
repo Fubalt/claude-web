@@ -42,60 +42,108 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-   --color-ring: var(--ring);
-   --color-input: var(--input);
-   --color-border: var(--border);
-   --color-destructive: var(--destructive);
-   --color-accent-foreground: var(--accent-foreground);
-   --color-accent: var(--accent);
-   --color-muted-foreground: var(--muted-foreground);
-   --color-muted: var(--muted);
-   --color-secondary-foreground: var(--secondary-foreground);
-   --color-secondary: var(--secondary);
-   --color-primary-foreground: var(--primary-foreground);
-   --color-primary: var(--primary);
-   --color-popover-foreground: var(--popover-foreground);
-   --color-popover: var(--popover);
-   --color-card-foreground: var(--card-foreground);
-   --color-card: var(--card);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
    --radius-sm: calc(var(--radius) * 0.6);
    --radius-md: calc(var(--radius) * 0.8);
    --radius-lg: var(--radius);
    --radius-xl: calc(var(--radius) * 1.4);
 }
 
-/* ── Bareface design tokens (light theme) ─────────────────────────── */
+/* ── Bareface design tokens ───────────────────────────────────────── */
 :root {
+  color-scheme: light;
+
   /* Bareface color palette — light */
-  --background: oklch(0.98 0.002 60);       /* #f5f5f4 ≈ white bg */
-  --foreground: oklch(0.15 0.005 60);       /* #1a1a1b ≈ dark text */
+  --background: oklch(0.98 0.002 60);
+  --foreground: oklch(0.15 0.005 60);
   --card: oklch(0.98 0.002 60);
   --card-foreground: oklch(0.15 0.005 60);
-  --popover: oklch(0.98 0.002 60);
+  --popover: oklch(0.99 0.002 60);
   --popover-foreground: oklch(0.15 0.005 60);
   --primary: oklch(0.15 0.005 60);
   --primary-foreground: oklch(0.98 0.002 60);
-  --secondary: oklch(0.96 0.003 60);        /* #f0efed — section bg */
+  --secondary: oklch(0.96 0.003 60);
   --secondary-foreground: oklch(0.15 0.005 60);
   --muted: oklch(0.96 0.003 60);
   --muted-foreground: oklch(0.45 0.008 60);
   --accent: oklch(0.96 0.003 60);
   --accent-foreground: oklch(0.15 0.005 60);
-   --destructive: oklch(0.577 0.245 27.325);
-   --border: oklch(0.82 0.008 60);         /* #c8c6c3 light border */
-   --input: oklch(0.82 0.008 60);
-   --ring: oklch(0.45 0.008 60);
-   --radius: 0rem;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.82 0.008 60);
+  --input: oklch(0.82 0.008 60);
+  --ring: oklch(0.45 0.008 60);
+  --radius: 0rem;
 
-  /* Bareface-specific custom tokens — light */
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
   --bf-bg: #ffffff;
   --bf-text: #1a1a1b;
   --bf-section-bg: #f5f5f4;
   --bf-border: #c8c6c3;
   --bf-black: #000000;
+  --bf-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231a1a1b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 }
 
-/* No .dark override needed — Bareface is always light */
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(0.2 0.006 260);
+  --foreground: oklch(0.93 0.005 60);
+  --card: oklch(0.22 0.006 260);
+  --card-foreground: oklch(0.93 0.005 60);
+  --popover: oklch(0.22 0.006 260);
+  --popover-foreground: oklch(0.93 0.005 60);
+  --primary: oklch(0.93 0.005 60);
+  --primary-foreground: oklch(0.18 0.006 260);
+  --secondary: oklch(0.26 0.008 260);
+  --secondary-foreground: oklch(0.93 0.005 60);
+  --muted: oklch(0.26 0.008 260);
+  --muted-foreground: oklch(0.62 0.012 60);
+  --accent: oklch(0.28 0.008 260);
+  --accent-foreground: oklch(0.93 0.005 60);
+  --destructive: oklch(0.55 0.2 27);
+  --border: oklch(0.34 0.012 260);
+  --input: oklch(0.34 0.012 260);
+  --ring: oklch(0.55 0.02 60);
+
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+
+  --bf-bg: #181a1b;
+  --bf-text: #e8e6e3;
+  --bf-section-bg: #25282b;
+  --bf-border: #3a3d40;
+  --bf-black: #000000;
+  --bf-select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23e8e6e3' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
 
 @layer base {
   * {

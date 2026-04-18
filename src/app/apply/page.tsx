@@ -13,7 +13,7 @@ export default function ApplyPage() {
   return (
     <>
       <Header />
-      <main style={{ backgroundColor: "#fff", minHeight: "100vh" }}>
+      <main className="min-h-screen bg-background text-foreground">
         <div
           style={{
             maxWidth: 960,
@@ -28,7 +28,7 @@ export default function ApplyPage() {
                 fontWeight: 600,
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
-                color: "#333",
+                color: "var(--foreground)",
                 fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
                 margin: 0,
               }}
